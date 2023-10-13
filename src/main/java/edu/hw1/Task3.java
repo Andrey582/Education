@@ -33,10 +33,9 @@ public class Task3 {
             }
         }
 
-        if (minFirst > minSecond && maxFirst < maxSecond) {
-            return true;
-        } else {
-            return false;
-        }
+        return minFirst > minSecond && maxFirst < maxSecond;
+    }
+
+    private Task3() {
     }
 }

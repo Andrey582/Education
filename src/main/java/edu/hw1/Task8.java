@@ -1,19 +1,24 @@
 package edu.hw1;
 
 public class Task8 {
+    private final static int BOARD_SIZE = 8;
+    private final static int BIG_STEP = 2;
+    private final static int SMALL_STEP = 1;
+
     public static boolean knightBoardCapture(int[][] board) {
         if (board == null) {
             return false;
         }
 
-        if (board.length != 8 || board[0].length != 8) {
+        if (board.length != BOARD_SIZE || board[0].length != BOARD_SIZE) {
             return false;
         }
 
-        int[] stepX = new int[] {-2, -1, 1, 2};
-        int[] stepY = new int[] {1, 2, 2, 1};
+        int[] stepX = new int[] {-BIG_STEP, -SMALL_STEP, SMALL_STEP, BIG_STEP};
+        int[] stepY = new int[] {SMALL_STEP, BIG_STEP, BIG_STEP, SMALL_STEP};
 
-        int x, y;
+        int x;
+        int y;
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -22,8 +27,8 @@ public class Task8 {
                         x = i + stepX[k];
                         y = j + stepY[k];
 
-                        if (x >= 0 && x < 8 && y >= 0 && y < 8){
-                            if (board[x][y] == 1){
+                        if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
+                            if (board[x][y] == 1) {
                                 return false;
                             }
                         }
@@ -32,5 +37,8 @@ public class Task8 {
             }
         }
         return true;
+    }
+
+    private Task8() {
     }
 }

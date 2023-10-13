@@ -3,7 +3,7 @@ package edu.hw1;
 public class Task7 {
     public static int rotateRight(int number, int step) {
         if (number < 0) {
-            return 0;
+            return -1;
         }
         char[] charArrayNumber = Integer.toBinaryString(number).toCharArray();
         char temp;
@@ -19,7 +19,7 @@ public class Task7 {
 
     public static int rotateLeft(int number, int step) {
         if (number < 0) {
-            return 0;
+            return -1;
         }
         char[] charArrayNumber = Integer.toBinaryString(number).toCharArray();
         char temp;
@@ -31,5 +31,8 @@ public class Task7 {
             charArrayNumber[charArrayNumber.length - 1] = temp;
         }
         return Integer.valueOf(String.valueOf(charArrayNumber), 2);
+    }
+
+    private Task7() {
     }
 }

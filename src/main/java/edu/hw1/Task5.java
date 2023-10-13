@@ -1,19 +1,22 @@
 package edu.hw1;
 
 public class Task5 {
+    private final static int TEN = 10;
 
     public static boolean isPalindromeDescendant(long number) {
         if (number < 0) {
             return false;
         }
 
+        long inputNumber = number;
+
         int count = Task2.countDigits(number);
 
         int[] numberArray = new int[count];
 
         for (int i = count - 1; i >= 0; i--) {
-            numberArray[i] = (int) (number % 10);
-            number /= 10;
+            numberArray[i] = (int) (inputNumber % TEN);
+            inputNumber /= TEN;
         }
         return isPalindromeArray(numberArray);
     }
@@ -37,7 +40,7 @@ public class Task5 {
             int newArraySize = 0;
             for (int i = 0; i < numberArray.length - 1; i += 2) {
                 newArraySize++;
-                if (numberArray[i] + numberArray[i + 1] > 9) {
+                if (numberArray[i] + numberArray[i + 1] >= TEN) {
                     newArraySize++;
                 }
             }
@@ -49,15 +52,16 @@ public class Task5 {
             int[] newNumberArray = new int[newArraySize];
             int newElement;
 
-            for (int i = 0, j = 0; i < numberArray.length - 1; i += 2, j++) {
+            for (int i = 0, j = 0; i < numberArray.length - 1; i += 2) {
                 newElement = numberArray[i] + numberArray[i + 1];
-                if (newElement > 9) {
-                    newNumberArray[j] = newElement / 10;
-                    newNumberArray[j + 1] = newElement % 10;
+                if (newElement >= TEN) {
+                    newNumberArray[j] = newElement / TEN;
+                    newNumberArray[j + 1] = newElement % TEN;
                     j++;
                 } else {
                     newNumberArray[j] = newElement;
                 }
+                j++;
             }
 
             if (numberArray.length % 2 != 0) {
@@ -66,5 +70,8 @@ public class Task5 {
 
             return isPalindromeArray(newNumberArray);
         }
+    }
+
+    private Task5() {
     }
 }

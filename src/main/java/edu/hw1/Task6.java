@@ -3,16 +3,21 @@ package edu.hw1;
 public class Task6 {
 
     private static final int CONST_KAPREKARA = 6174;
+    private static final int NEEDED_NUMBER_COUNT = 4;
 
     public static int kaprekar(int number) {
-        if (Task2.countDigits(number) != 4 || number == CONST_KAPREKARA || number < 0) {
+        if (number == CONST_KAPREKARA) {
             return 0;
+        }
+
+        if (Task2.countDigits(number) != NEEDED_NUMBER_COUNT || number < 0) {
+            return -1;
         }
 
         char[] charArrayNumber = String.valueOf(number).toCharArray();
 
         if (!haveUniqueDigit(charArrayNumber)) {
-            return 0;
+            return -1;
         }
 
         int bigger = Integer.valueOf(String.valueOf(sortDesc(charArrayNumber)));
@@ -20,11 +25,7 @@ public class Task6 {
 
         int newNumber = bigger - lower;
 
-        if (newNumber == CONST_KAPREKARA) {
-            return 1;
-        } else {
-            return 1 + kaprekar(newNumber);
-        }
+        return newNumber == CONST_KAPREKARA ? 1 : 1 + kaprekar(newNumber);
     }
 
     private static char[] sortDesc(char[] array) {
@@ -77,5 +78,8 @@ public class Task6 {
             }
         }
         return false;
+    }
+
+    private Task6() {
     }
 }

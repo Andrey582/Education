@@ -13,7 +13,8 @@ public class Task7Test {
         "8, 1, 4",
         "16, 3, 2",
         "8, 4, 8",
-        "5, 1, 6"
+        "5, 1, 6",
+        "-12, 2, -1"
     })
     void rotateRightTest(int number, int step, int expected) {
         // when
@@ -30,7 +31,8 @@ public class Task7Test {
         "9, 1, 3",
         "16, 1, 1",
         "17, 2, 6",
-        "11, 4, 11"
+        "11, 4, 11",
+        "-12, 2, -1"
     })
     void rotateLeftTest(int number, int step, int expected) {
         // when
