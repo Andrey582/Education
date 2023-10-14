@@ -16,7 +16,8 @@ public class Task1Test {
         "13:56, 836",
         "10:60, -1",
         "-10:59, -1",
-        "999:59, 59999"
+        "999:59, 59999",
+        "999:9O, -1"
     })
     void minuteToSecondTest(String given, long expected) {
         // when

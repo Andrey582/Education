@@ -7,6 +7,10 @@ package edu.hw1;
 
     public static long minuteToSeconds(String time) {
 
+        if (!isCorrectInput(time)) {
+            return -1;
+        }
+
         var arr = time.split(":");
         if (arr.length != 2) {
             return -1;
@@ -20,6 +24,15 @@ package edu.hw1;
         }
 
         return minute * CONVERT_MINUTE_TO_SECONDS + second;
+    }
+
+    private static boolean isCorrectInput(String input) {
+        for (var temp : input.toCharArray()) {
+            if (temp < '0' || temp > '9' && temp != ':') {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Task1() {
