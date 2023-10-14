@@ -1,5 +1,7 @@
 package edu.hw1;
 
+import java.util.Arrays;
+
 public class Task3 {
     public static boolean isNestable(int[] firstArray, int[] secondArray) {
         if (secondArray == null || firstArray == null) {
@@ -10,28 +12,10 @@ public class Task3 {
             return false;
         }
 
-        int maxFirst = firstArray[0];
-        int minFirst = firstArray[0];
-        int minSecond = secondArray[0];
-        int maxSecond = secondArray[0];
-
-        for (int val : firstArray) {
-            if (maxFirst < val) {
-                maxFirst = val;
-            }
-            if (minFirst > val) {
-                minFirst = val;
-            }
-        }
-
-        for (int val : secondArray) {
-            if (maxSecond < val) {
-                maxSecond = val;
-            }
-            if (minSecond > val) {
-                minSecond = val;
-            }
-        }
+        int maxFirst = Arrays.stream(firstArray).max().getAsInt();
+        int minFirst = Arrays.stream(firstArray).min().getAsInt();
+        int minSecond = Arrays.stream(secondArray).min().getAsInt();
+        int maxSecond = Arrays.stream(secondArray).max().getAsInt();
 
         return minFirst > minSecond && maxFirst < maxSecond;
     }
