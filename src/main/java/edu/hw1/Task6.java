@@ -1,5 +1,7 @@
 package edu.hw1;
 
+import java.util.Arrays;
+
 public class Task6 {
 
     private static final int CONST_KAPREKARA = 6174;
@@ -20,53 +22,26 @@ public class Task6 {
             return -1;
         }
 
-        int bigger = Integer.valueOf(String.valueOf(sortDesc(charArrayNumber)));
-        int lower = Integer.valueOf(String.valueOf(sortAsc(charArrayNumber)));
+        Arrays.sort(charArrayNumber);
+
+        int lower = Integer.valueOf(String.valueOf(charArrayNumber));
+
+        reverse(charArrayNumber);
+
+        int bigger = Integer.valueOf(String.valueOf(charArrayNumber));
 
         int newNumber = bigger - lower;
 
         return newNumber == CONST_KAPREKARA ? 1 : 1 + kaprekar(newNumber);
     }
 
-    private static char[] sortDesc(char[] array) {
-        char max;
+    private static void reverse(char[] array) {
         char temp;
-        int maxIndex;
-        for (int i = 0; i < array.length - 1; i++) {
-            max = array[i];
-            maxIndex = i;
-            for (int j = i + 1; j < array.length; j++) {
-                if (max < array[j]) {
-                    max = array[j];
-                    maxIndex = j;
-                }
-            }
-            temp = array[i];
-            array[i] = max;
-            array[maxIndex] = temp;
+        for (int i = 0; i < array.length / 2; i++) {
+            temp = array[array.length - 1 - i];
+            array[array.length - 1 - i] = array[i];
+            array[i] = temp;
         }
-        return array;
-    }
-
-    private static char[] sortAsc(char[] array) {
-        char min;
-        char temp;
-        int minIndex;
-        for (int i = 0; i < array.length - 1; i++) {
-            min = array[i];
-            minIndex = i;
-            for (int j = i + 1; j < array.length; j++) {
-                if (min > array[j]) {
-                    min = array[j];
-                    minIndex = j;
-                }
-            }
-            temp = array[i];
-            array[i] = min;
-            array[minIndex] = temp;
-        }
-
-        return array;
     }
 
     private static boolean haveUniqueDigit(char[] array) {
