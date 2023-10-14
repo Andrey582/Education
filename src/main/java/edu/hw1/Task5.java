@@ -12,63 +12,49 @@ public class Task5 {
 
         int count = Task2.countDigits(number);
 
-        int[] numberArray = new int[count];
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = count - 1; i >= 0; i--) {
-            numberArray[i] = (int) (inputNumber % TEN);
+        for (int i = 0; i < count; i++) {
+            sb.append(inputNumber % TEN);
             inputNumber /= TEN;
         }
-        return isPalindromeArray(numberArray);
+        sb.reverse();
+        return isPalindromeStringBuilder(sb);
     }
 
-    private static boolean isPalindromeArray(int[] numberArray) {
-        if (numberArray.length < 2) {
+    private static boolean isPalindromeStringBuilder(StringBuilder sb) {
+        if (sb.length() < 2) {
             return false;
         }
 
-        boolean isPalinsrome = true;
-        for (int i = 0; i < numberArray.length / 2; i++) {
-            if (numberArray[i] != numberArray[numberArray.length - 1 - i]) {
-                isPalinsrome = false;
-                break;
-            }
-        }
+        String reversed = sb.reverse().toString();
+        sb.reverse();
+        boolean isPalindrome = sb.toString().equals(reversed);
 
-        if (isPalinsrome) {
+        if (isPalindrome) {
             return true;
         } else {
-            int newArraySize = 0;
-            for (int i = 0; i < numberArray.length - 1; i += 2) {
-                newArraySize++;
-                if (numberArray[i] + numberArray[i + 1] >= TEN) {
-                    newArraySize++;
-                }
-            }
-
-            if (numberArray.length % 2 != 0) {
-                newArraySize++;
-            }
-
-            int[] newNumberArray = new int[newArraySize];
+            StringBuilder newSB = new StringBuilder();
             int newElement;
+            while (sb.length() > 1) {
+                newElement = Character.getNumericValue(sb.charAt(0)) + Character.getNumericValue(sb.charAt(1));
 
-            for (int i = 0, j = 0; i < numberArray.length - 1; i += 2) {
-                newElement = numberArray[i] + numberArray[i + 1];
+                sb.deleteCharAt(0);
+                sb.deleteCharAt(0);
+
                 if (newElement >= TEN) {
-                    newNumberArray[j] = newElement / TEN;
-                    newNumberArray[j + 1] = newElement % TEN;
-                    j++;
+                    newSB.append(newElement / TEN);
+                    newSB.append(newElement % TEN);
                 } else {
-                    newNumberArray[j] = newElement;
+                    newSB.append(newElement);
                 }
-                j++;
             }
 
-            if (numberArray.length % 2 != 0) {
-                newNumberArray[newArraySize - 1] = numberArray[numberArray.length - 1];
+            if (sb.length() == 1) {
+                newSB.append(sb.charAt(0));
             }
 
-            return isPalindromeArray(newNumberArray);
+            return isPalindromeStringBuilder(newSB);
         }
     }
 
