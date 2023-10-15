@@ -42,12 +42,7 @@ public class Task5 {
                 sb.deleteCharAt(0);
                 sb.deleteCharAt(0);
 
-                if (newElement >= TEN) {
-                    newSB.append(newElement / TEN);
-                    newSB.append(newElement % TEN);
-                } else {
-                    newSB.append(newElement);
-                }
+                newSB.append(newElement);
             }
 
             if (sb.length() == 1) {
