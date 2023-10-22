@@ -1,7 +1,5 @@
 package edu.hw2.Task2;
 
-import java.security.PublicKey;
-
 public class Square extends Rectangle implements FigureShape {
 
     private int width;

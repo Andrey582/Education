@@ -1,7 +1,5 @@
 package edu.hw2.Task2;
 
-import edu.hw2.Task4.Info;
-
 public class Rectangle implements FigureShape {
 
     private int width;

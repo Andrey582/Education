@@ -5,15 +5,16 @@ import edu.hw2.Task2.Square;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Task2Test {
 
-    static Arguments[] rectangles() {
-        return new Arguments[]{
+    static Stream<Arguments> rectangles() {
+        return Stream.of(
             Arguments.of(new Rectangle()),
             Arguments.of(new Square())
-        };
+        );
     }
 
     @ParameterizedTest

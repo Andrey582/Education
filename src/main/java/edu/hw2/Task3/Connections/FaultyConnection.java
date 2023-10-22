@@ -4,11 +4,9 @@ import edu.hw2.Task3.Connection;
 import edu.hw2.Task3.ConnectionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.util.Random;
 
 public class FaultyConnection implements Connection {
-    private final Logger LOGGER = LogManager.getLogger();
-    private final Random RANDOM = new Random();
+    private static final Logger LOGGER = LogManager.getLogger();
     private final int attemptsToGoodResult = 5;
     private int attempts = 0;
 
