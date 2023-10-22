@@ -1,7 +1,9 @@
 package edu.project1;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,9 +12,7 @@ public class Session {
     private final static Logger LOGGER = LogManager.getLogger();
     private final String answer;
     private final char[] userAnswer;
-    private final StringBuilder availableLetters = new StringBuilder(
-        "a b c d e f g h i j k l m n o p q r s t u v w x y z "
-    );
+    private final Set<Character> availableLetters;
     private final int maxAttempts = 5;
     private int attempts = 0;
     private static final String EXIT = "exit";
@@ -30,6 +30,8 @@ public class Session {
         }
         userAnswer = new char[answer.length()];
         Arrays.fill(userAnswer, '_');
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        availableLetters = convertStringToSet(alphabet);
         printRule();
     }
 
@@ -42,9 +44,8 @@ public class Session {
             return Status.GIVEUP;
         }
 
-        if (availableLetters.indexOf(input) != -1) {
-            int indexUsed = availableLetters.indexOf(input);
-            availableLetters.delete(indexUsed, indexUsed + 2);
+        if (availableLetters.contains(input.charAt(0))) {
+            availableLetters.remove(input.charAt(0));
         } else {
             printResult(Status.ALREADYUSED);
             return Status.ALREADYUSED;
@@ -129,6 +130,14 @@ public class Session {
     private void printGuess() {
         LOGGER.info("> Guess a letter: ");
         LOGGER.info("> ");
+    }
+
+    private Set<Character> convertStringToSet(String input) {
+        Set<Character> temp = new HashSet<Character>();
+        for (char element : input.toCharArray()) {
+            temp.add(element);
+        }
+        return temp;
     }
 
     public Status[] getENDGAME() {
