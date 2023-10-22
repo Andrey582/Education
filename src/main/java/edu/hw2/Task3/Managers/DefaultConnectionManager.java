@@ -8,11 +8,16 @@ import java.util.Random;
 
 public class DefaultConnectionManager implements ConnectionManager {
     private final Random RANDOM = new Random();
+    private static final int attemptsToGoodResult = 5;
+    private int attempts = 0;
 
     @Override
     public Connection getConnection() {
-        return RANDOM.nextInt(100) < 85
-            ? new StableConnection()
-            : new FaultyConnection();
+        attempts++;
+        return attempts < attemptsToGoodResult
+            ? new FaultyConnection(attempts)
+            : new StableConnection();
     }
+
+
 }

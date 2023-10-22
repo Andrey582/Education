@@ -10,10 +10,10 @@ public class Main {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static void main(String[] args) {
-        PopularCommandExecutor executor = new PopularCommandExecutor(new FaultyConnectionManager(), 10);
+        PopularCommandExecutor executor = new PopularCommandExecutor(new FaultyConnectionManager(), 2);
         try {
             executor.updatePackages();
-        } catch (RuntimeException e) {
+        } catch (ConnectionException e) {
             LOGGER.info(e.getCause());
         }
     }

@@ -7,9 +7,11 @@ import java.util.Random;
 
 public class FaultyConnectionManager implements ConnectionManager {
     private final Random RANDOM = new Random();
+    private int attempts = 0;
 
     @Override
     public Connection getConnection() {
-        return new FaultyConnection();
+        attempts++;
+        return new FaultyConnection(attempts);
     }
 }
