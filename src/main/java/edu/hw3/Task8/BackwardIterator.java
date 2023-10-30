@@ -6,11 +6,11 @@ import java.util.NoSuchElementException;
 
 public class BackwardIterator<T> implements Iterator<T> {
 
-    private final Object[] collection;
+    private final T[] collection;
     private int currentIndex;
 
     public BackwardIterator(Collection<T> collection) {
-        this.collection = collection.toArray();
+        this.collection = (T[]) collection.toArray();
         currentIndex = collection.size();
     }
 
@@ -23,7 +23,7 @@ public class BackwardIterator<T> implements Iterator<T> {
     public T next() {
         if (hasNext()) {
             currentIndex--;
-            return (T) collection[currentIndex];
+            return collection[currentIndex];
         } else {
             throw new NoSuchElementException();
         }

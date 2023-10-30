@@ -1,5 +1,7 @@
 package edu.hw3;
 
+import java.util.Arrays;
+
 public class Task5 {
 
     public static Contact[] parseContacts(String[] contacts, String orderBy) {
@@ -26,56 +28,12 @@ public class Task5 {
         }
 
         switch (orderBy.toUpperCase()) {
-            case "ASC" -> sortAsc(sortedArray);
-            case "DESC" -> sortDesc(sortedArray);
+            case "ASC" -> Arrays.sort(sortedArray, Contact::compareAsc);
+            case "DESC" -> Arrays.sort(sortedArray, Contact::compareDesc);
             default -> throw new IllegalArgumentException("Wrong order");
         }
 
         return sortedArray;
-    }
-
-    private static void sortAsc(Contact[] array) {
-        Contact contactToSwap;
-        int indexToSwap;
-
-        for (int i = 0; i < array.length; i++) {
-            contactToSwap = array[i];
-            indexToSwap = i;
-
-            for (int j = i; j < array.length; j++) {
-
-                if (contactToSwap.compare(array[j]) > 0) {
-                    contactToSwap = array[j];
-                    indexToSwap = j;
-                }
-            }
-
-            var temp = contactToSwap;
-            array[indexToSwap] = array[i];
-            array[i] = temp;
-        }
-    }
-
-    private static void sortDesc(Contact[] array) {
-        Contact contactToSwap;
-        int indexToSwap;
-
-        for (int i = 0; i < array.length; i++) {
-            contactToSwap = array[i];
-            indexToSwap = i;
-
-            for (int j = i; j < array.length; j++) {
-
-                if (contactToSwap.compare(array[j]) < 0) {
-                    contactToSwap = array[j];
-                    indexToSwap = j;
-                }
-            }
-
-            var temp = contactToSwap;
-            array[indexToSwap] = array[i];
-            array[i] = temp;
-        }
     }
 
     private Task5() {
@@ -86,6 +44,32 @@ public class Task5 {
             String firstStringToCompare = this.surname == null ? this.name : this.surname;
             String secondStringToCompare = another.surname == null ? another.name : another.surname;
             return firstStringToCompare.compareTo(secondStringToCompare);
+        }
+
+        public static int compareAsc(Contact firstContact, Contact secondContact) {
+            String first = firstContact.surname == null ? firstContact.name : firstContact.surname;
+            String second = secondContact.surname == null ? secondContact.name : secondContact.surname;
+
+            for (int i = 0; i < first.length() && i < second.length(); i++) {
+                if (first.charAt(i) != second.charAt(i)) {
+                    return first.charAt(i) - second.charAt(i);
+                }
+            }
+
+            return first.length() - second.length();
+        }
+
+        public static int compareDesc(Contact firstContact, Contact secondContact) {
+            String first = firstContact.surname == null ? firstContact.name : firstContact.surname;
+            String second = secondContact.surname == null ? secondContact.name : secondContact.surname;
+
+            for (int i = 0; i < first.length() && i < second.length(); i++) {
+                if (first.charAt(i) != second.charAt(i)) {
+                    return second.charAt(i) - first.charAt(i);
+                }
+            }
+
+            return second.length() - first.length();
         }
     }
 }
