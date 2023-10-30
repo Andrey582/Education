@@ -1,6 +1,5 @@
 package edu.hw2;
 
-import edu.hw2.Task3.Connection;
 import edu.hw2.Task3.ConnectionException;
 import edu.hw2.Task3.Connections.FaultyConnection;
 import edu.hw2.Task3.Connections.StableConnection;
@@ -39,7 +38,7 @@ public class Task3Test {
 
         // when
         ConnectionException exception = assertThrows(ConnectionException.class, () -> {
-            PopularCommandExecutor executor = new PopularCommandExecutor(new FaultyConnectionManager(), 4);
+            PopularCommandExecutor executor = new PopularCommandExecutor(new FaultyConnectionManager(), 3);
             executor.updatePackages();
         });
 

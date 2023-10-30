@@ -1,5 +1,7 @@
 package edu.hw2.Task3;
 
+import edu.hw2.Task3.Connections.Connection;
+import edu.hw2.Task3.Managers.ConnectionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

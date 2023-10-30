@@ -20,11 +20,7 @@ public sealed interface Expr {
     public record Exponent(Expr constant, int power) implements Expr {
         @Override
         public double evalute() {
-            double tempNumber = constant.evalute();
-            for (int i = 1; i < power; i++) {
-                tempNumber *= constant.evalute();
-            }
-            return tempNumber;
+            return Math.pow(constant.evalute(), power);
         }
     }
 

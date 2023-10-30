@@ -1,6 +1,5 @@
 package edu.hw2.Task3.Connections;
 
-import edu.hw2.Task3.Connection;
 import edu.hw2.Task3.ConnectionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,11 +7,11 @@ import org.apache.logging.log4j.Logger;
 public class FaultyConnection implements Connection {
     private static final Logger LOGGER = LogManager.getLogger();
     private final int attemptsToGoodResult = 5;
-    private int attempts = 0;
+    private int attempts;
 
     @Override
     public void execute(String command) throws ConnectionException {
-        if (attempts < attemptsToGoodResult) {
+        if (attempts % attemptsToGoodResult != 0) {
             throw new ConnectionException("Command failed",
                 new Throwable("The faulty connection couldn't execute the command"));
         } else {
