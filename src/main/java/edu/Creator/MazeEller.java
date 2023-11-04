@@ -20,7 +20,10 @@ public class MazeEller implements MazeCreator {
         width = maze[0].length;
     }
 
-    public MazeEller(int height, int width) {
+    public MazeEller(int height, int width) throws IllegalArgumentException {
+        if (height < 1 || width < 1) {
+            throw new IllegalArgumentException("height and width need be greater than 1");
+        }
         this.width = width;
         this.height = height;
         generate();

@@ -21,7 +21,7 @@ public class MazeDeepFirsSearch implements MazeCreator {
         this.maze = maze;
     }
 
-    public MazeDeepFirsSearch(int height, int width) {
+    public MazeDeepFirsSearch(int height, int width) throws IllegalArgumentException {
         if (height < 1 || width < 1) {
             throw new IllegalArgumentException("height and width need be greater than 1");
         }

@@ -6,12 +6,8 @@ import edu.Creator.MazeEller;
 import edu.Solver.MazeSolver;
 import edu.Solver.SolveDeepFirstSearch;
 import edu.Solver.WallFollowerSolve;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import java.util.ArrayDeque;
-import java.util.List;
 import java.util.Queue;
-
+import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SelfWrittenMazeSolveTest {

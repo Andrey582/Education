@@ -2,7 +2,6 @@ package edu.Solver;
 
 import edu.Cell;
 import edu.Creator.MazeCreator;
-import edu.Creator.MazeEller;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -18,12 +17,14 @@ public class SolveDeepFirstSearch implements MazeSolver {
     private Cell[][] maze;
 
     @Override
-    public Queue<Cell> solve(MazeCreator maze, int startX, int startY, int endX, int endY) {
+    public Queue<Cell> solve(MazeCreator maze, int startX, int startY, int endX, int endY)
+        throws IllegalArgumentException {
+
         deque = new ArrayDeque<>();
         this.maze = maze.getMaze();
 
         if (!isCoordinateInMaze(startX * 2 + 1, startY * 2 + 1, endX * 2 + 1, endY * 2 + 1)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Coordinates must be greater than 0 and less than height/width");
         }
 
         Cell next;

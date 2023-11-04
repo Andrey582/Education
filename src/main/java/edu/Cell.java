@@ -68,13 +68,17 @@ public class Cell {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Cell) {
-            Cell cell = (Cell) obj;
+        if (obj instanceof Cell cell) {
 
             return x == cell.getX()
                 && y == cell.getY()
                 && type == cell.getType();
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * x + y;
     }
 }

@@ -2,10 +2,8 @@ package edu;
 
 import edu.Creator.MazeCreator;
 import edu.Creator.MazeDeepFirsSearch;
-import java.util.List;
 import edu.Creator.MazeEller;
 import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SelfWrittenMazeTest {
