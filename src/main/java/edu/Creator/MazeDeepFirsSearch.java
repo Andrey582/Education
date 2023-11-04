@@ -1,62 +1,55 @@
-package edu;
+package edu.Creator;
 
+import edu.Cell;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.Random;
 
-public class Maze implements MazeCreator {
+public class MazeDeepFirsSearch implements MazeCreator {
 
-    private Random random = new Random();
+    private final static Random RANDOM = new Random();
+    private final Deque<Cell> stack = new ArrayDeque<>();
+
     private  Cell[][] maze;
     private Cell currentCell;
-    private Cell start;
-    private Cell exit;
-    private Deque<Cell> stack = new ArrayDeque<>();
+    private int height;
+    private int width;
 
-
-    public static void main(String[] args) {
-        Maze maze = new Maze(30, 30);
-        Solve solve = new Solve();
-        solve.solve(maze);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        solve.print();
+    public MazeDeepFirsSearch(Cell[][] maze) {
+        this.maze = maze;
     }
 
-    public Maze(int height, int width) {
-        fillMaze(height, width);
-        currentCell = maze[1][1];
+    public MazeDeepFirsSearch(int height, int width) {
+        if (height < 1 || width < 1) {
+            throw new IllegalArgumentException("height and width need be greater than 1");
+        }
+        this.height = height;
+        this.width = width;
         generate();
-        print();
     }
 
     @Override
     public Cell[][] generate() {
+        fillMaze(height, width);
+        currentCell = maze[1][1];
         Cell next;
-        int count = 0;
-        currentCell.setType(Cell.Type.START);
-        start = currentCell;
+
         do {
             visitCell(currentCell);
             List<Cell> neighbor = checkNeighbor();
 
-            if (stack.size() > count) {
-                count = stack.size();
-                exit = stack.peek();
-            }
-
             if (neighbor.isEmpty()) {
                 next = stack.poll();
             } else {
-                next = neighbor.get(random.nextInt(neighbor.size()));
+                next = neighbor.get(RANDOM.nextInt(neighbor.size()));
                 breakWall(currentCell, next);
             }
             currentCell = next;
+
         } while (!stack.isEmpty());
-        exit.setType(Cell.Type.END);
+
         clearVisited();
         return maze;
     }
@@ -66,7 +59,6 @@ public class Maze implements MazeCreator {
         maze = new Cell[height * 2 + 1][width * 2 + 1];
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
-
                 if (i == 0 || i == maze.length - 1 || j == 0 || j == maze[0].length - 1) {
                     maze[i][j] = new Cell(Cell.Type.WALL, j, i);
                 } else if (i % 2 == j % 2 && i % 2 == 1) {
@@ -78,6 +70,7 @@ public class Maze implements MazeCreator {
         }
     }
 
+    @SuppressWarnings("RegexpSinglelineJava")
     public void print() {
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
@@ -88,25 +81,25 @@ public class Maze implements MazeCreator {
     }
 
     private boolean checkCell(int y, int x) {
-        return y >= 1 && y <= maze.length - 2 && x >= 1 && x <= maze[0].length - 2;
+        return y >= 1
+            && y <= maze.length - 2
+            && x >= 1
+            && x <= maze[0].length - 2
+            && !maze[y][x].isVisited();
     }
 
     private List<Cell> checkNeighbor() {
         List<Cell> neighbor = new ArrayList<>();
-        if (checkCell(currentCell.getY(), currentCell.getX() - 2)
-            && !maze[currentCell.getY()][currentCell.getX() - 2].isVisited()) {
+        if (checkCell(currentCell.getY(), currentCell.getX() - 2)) {
             neighbor.add(maze[currentCell.getY()][currentCell.getX() - 2]);
         }
-        if (checkCell(currentCell.getY() + 2, currentCell.getX())
-            && !maze[currentCell.getY() + 2][currentCell.getX()].isVisited()) {
+        if (checkCell(currentCell.getY() + 2, currentCell.getX())) {
             neighbor.add(maze[currentCell.getY() + 2][currentCell.getX()]);
         }
-        if (checkCell(currentCell.getY(), currentCell.getX() + 2)
-            && !maze[currentCell.getY()][currentCell.getX() + 2].isVisited()) {
+        if (checkCell(currentCell.getY(), currentCell.getX() + 2)) {
             neighbor.add(maze[currentCell.getY()][currentCell.getX() + 2]);
         }
-        if (checkCell(currentCell.getY() - 2, currentCell.getX())
-            && !maze[currentCell.getY() - 2][currentCell.getX()].isVisited()) {
+        if (checkCell(currentCell.getY() - 2, currentCell.getX())) {
             neighbor.add(maze[currentCell.getY() - 2][currentCell.getX()]);
         }
         return neighbor;
@@ -131,18 +124,11 @@ public class Maze implements MazeCreator {
     private void visitCell(Cell cell) {
         if (!cell.isVisited()) {
             stack.addFirst(cell);
+            cell.setVisited(true);
         }
-        cell.setVisited(true);
     }
 
-    public Cell getStart() {
-        return start;
-    }
-
-    public Cell getExit() {
-        return exit;
-    }
-
+    @Override
     public Cell[][] getMaze() {
         return maze;
     }

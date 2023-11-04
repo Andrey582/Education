@@ -2,17 +2,17 @@ package edu;
 
 public class Cell {
 
-    private static final String WHITE_CELL = "\u001B[47m" + "\u001B[37m" + "..." + "\u001B[0m";
-    private static final String BLACK_CELL = "\u001B[40m" + "\u001B[30m" + "..." + "\u001B[0m";
-    private static final String START_CELL = "\u001B[42m" + "\u001B[32m" + "..." + "\u001B[0m";
-    private static final String END_CELL = "\u001B[41m" + "\u001B[31m" + "..." + "\u001B[0m";
-    private static final String SOLVE_CELL = "\u001B[43m" + "\u001B[33m" + "..." + "\u001B[0m";
+    private static final String WHITE_CELL = "\u001B[47m\u001B[37m...\u001B[0m";
+    private static final String BLACK_CELL = "\u001B[40m\u001B[30m...\u001B[0m";
+    private static final String START_CELL = "\u001B[42m\u001B[32m...\u001B[0m";
+    private static final String END_CELL = "\u001B[41m\u001B[31m...\u001B[0m";
+    private static final String SOLVE_CELL = "\u001B[43m\u001B[33m...\u001B[0m";
 
 
     private boolean visited = false;
     private Type type;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     public Cell(Type type, int x, int y) {
         this.type = type;
@@ -44,6 +44,7 @@ public class Cell {
         return y;
     }
 
+    @SuppressWarnings("RegexpSinglelineJava")
     public void printSelf() {
         switch (type) {
             case WALL -> System.out.print(WHITE_CELL);
@@ -51,6 +52,9 @@ public class Cell {
             case START -> System.out.print(START_CELL);
             case END -> System.out.print(END_CELL);
             case SOlVE -> System.out.print(SOLVE_CELL);
+            default -> {
+                // nothing
+            }
         }
     }
 
@@ -60,6 +64,17 @@ public class Cell {
         START,
         END,
         SOlVE
-
    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Cell) {
+            Cell cell = (Cell) obj;
+
+            return x == cell.getX()
+                && y == cell.getY()
+                && type == cell.getType();
+        }
+        return false;
+    }
 }

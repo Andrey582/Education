@@ -1,32 +1,34 @@
-package edu;
+package edu.Solver;
 
+import edu.Cell;
+import edu.Creator.MazeCreator;
+import edu.Creator.MazeEller;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
-import java.util.Deque;
+import java.util.Queue;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.Stack;
 
-public class Solve implements MazeSolver {
+public class SolveDeepFirstSearch implements MazeSolver {
 
-    private Cell start;
-    private Cell exit;
+    private final Random random = new Random();
     private Deque<Cell> deque;
     private Cell currentCell;
     private Cell[][] maze;
-    private Random random = new Random();
 
     @Override
-    public Deque<Cell> solve(Maze maze) {
-        start = maze.getStart();
-        exit = maze.getExit();
+    public Queue<Cell> solve(MazeCreator maze, int startX, int startY, int endX, int endY) {
         deque = new ArrayDeque<>();
         this.maze = maze.getMaze();
+
+        if (!isCoordinateInMaze(startX * 2 + 1, startY * 2 + 1, endX * 2 + 1, endY * 2 + 1)) {
+            throw new IllegalArgumentException();
+        }
+
         Cell next;
+        Cell exit = this.maze[endY * 2 + 1][endX * 2 + 1];
+        Cell start = this.maze[startY * 2 + 1][startX * 2 + 1];
         currentCell = start;
 
         do {
@@ -45,53 +47,49 @@ public class Solve implements MazeSolver {
                 next = neighbor.get(random.nextInt(neighbor.size()));
             }
             currentCell = next;
-            //print();
+
+            if (currentCell.equals(start)) {
+                return null;
+            }
+
         } while (!currentCell.equals(exit));
-        //print(deque);
+        deque.addLast(exit);
+        exit.setType(Cell.Type.END);
+        start.setType(Cell.Type.START);
         return deque;
     }
 
     private List<Cell> checkNeighbor() {
         List<Cell> neighbor = new ArrayList<>();
-        if (!maze[currentCell.getY()][currentCell.getX() - 1].isVisited()
-            && maze[currentCell.getY()][currentCell.getX() - 1].getType() != Cell.Type.WALL) {
+        if (checkCell(currentCell.getY(), currentCell.getX() - 1)) {
             neighbor.add(maze[currentCell.getY()][currentCell.getX() - 1]);
         }
-        if (!maze[currentCell.getY() + 1][currentCell.getX()].isVisited()
-            && maze[currentCell.getY() + 1][currentCell.getX()].getType() != Cell.Type.WALL) {
+        if (checkCell(currentCell.getY() + 1, currentCell.getX())) {
             neighbor.add(maze[currentCell.getY() + 1][currentCell.getX()]);
         }
-        if (!maze[currentCell.getY()][currentCell.getX() + 1].isVisited()
-            && maze[currentCell.getY()][currentCell.getX() + 1].getType() != Cell.Type.WALL) {
+        if (checkCell(currentCell.getY(), currentCell.getX() + 1)) {
             neighbor.add(maze[currentCell.getY()][currentCell.getX() + 1]);
         }
-        if (!maze[currentCell.getY() - 1][currentCell.getX()].isVisited()
-            && maze[currentCell.getY() - 1][currentCell.getX()].getType() != Cell.Type.WALL) {
+        if (checkCell(currentCell.getY() - 1, currentCell.getX())) {
             neighbor.add(maze[currentCell.getY() - 1][currentCell.getX()]);
         }
         return neighbor;
     }
 
     private boolean checkCell(int y, int x) {
-        return y >= 1 && y <= maze.length - 2 && x >= 1 && x <= maze[0].length - 2;
+        return !maze[y][x].isVisited()
+            && maze[y][x].getType() != Cell.Type.WALL;
     }
 
     private void visitCell(Cell cell) {
         if (!cell.isVisited()) {
             deque.add(cell);
+            cell.setVisited(true);
         }
-        cell.setVisited(true);
     }
 
+    @SuppressWarnings("RegexpSinglelineJava")
     public void print() {
-        for (int i = 0; i < maze.length; i++) {
-            if (i < 10) {
-                System.out.print(" " + i + " ");
-            } else {
-                System.out.print(" " + i);
-            }
-        }
-        System.out.println();
         for (int i = 0; i < maze.length; i++) {
             for (int j = 0; j < maze[0].length; j++) {
                 maze[i][j].printSelf();
@@ -100,11 +98,10 @@ public class Solve implements MazeSolver {
         }
     }
 
-    public void print(Deque<Cell> deque) {
-        while (!deque.isEmpty()) {
-            Cell temp = deque.poll();
-            System.out.println(temp.getX() + " | " + temp.getY());
-        }
+    private boolean isCoordinateInMaze(int x1, int y1, int x2, int y2) {
+        return x1 >= 0 && x1 < maze[0].length
+        && y1 >= 0 && y1 < maze.length
+        && x2 >= 0 && x2 < maze[0].length
+        && y2 >= 0 && y2 < maze.length;
     }
-
 }

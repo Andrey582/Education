@@ -1,8 +1,14 @@
-package edu;
+package edu.Creator;
 
-import java.util.Arrays;
+import edu.Cell;
 
 public interface MazeCreator {
+
     Cell[][] generate();
+
     void fillMaze(int height, int width);
+
+    Cell[][] getMaze();
+
+    void print();
 }
