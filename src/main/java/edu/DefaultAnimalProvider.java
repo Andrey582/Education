@@ -3,6 +3,8 @@ package edu;
 import java.util.List;
 
 public class DefaultAnimalProvider {
+
+    @SuppressWarnings("MagicNumber")
     public static List<Animal> getList = List.of(
         new Animal("golden retriever", Animal.Type.DOG, Animal.Sex.M, 9, 57, 31000, true),
         new Animal("shiba inu", Animal.Type.DOG, Animal.Sex.M, 5, 40, 12000, true),
@@ -20,4 +22,7 @@ public class DefaultAnimalProvider {
         new Animal("karakurt", Animal.Type.SPIDER, Animal.Sex.F, 2, 2, 1, true),
         new Animal("tarantula", Animal.Type.SPIDER, Animal.Sex.M, 12, 7, 130, true)
     );
+
+    private DefaultAnimalProvider() {
+    }
 }

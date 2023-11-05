@@ -9,7 +9,7 @@ public record Animal(
     int weight,
     boolean bites
 ) {
-    enum Type {
+    public enum Type {
         CAT, DOG, BIRD, FISH, SPIDER
     }
 
@@ -17,6 +17,7 @@ public record Animal(
         M, F
     }
 
+    @SuppressWarnings("MagicNumber")
     public int paws() {
         return switch (type) {
             case CAT, DOG -> 4;
