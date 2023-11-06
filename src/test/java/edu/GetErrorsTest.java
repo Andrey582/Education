@@ -3,17 +3,14 @@ package edu;
 import edu.Validation.HeightError;
 import edu.Validation.ValidationError;
 import edu.Validation.WeightError;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class getErrorsTest {
+public class GetErrorsTest {
 
     @Test
     void getErrors() {

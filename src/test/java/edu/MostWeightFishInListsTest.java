@@ -1,12 +1,11 @@
 package edu;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class mostWeightFishInListsTest {
+public class MostWeightFishInListsTest {
 
     @Test
     void mostWeightFishInLists() {

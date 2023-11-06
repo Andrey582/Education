@@ -1,14 +1,12 @@
 package edu;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class countGroupingByTypeTest {
+public class CountGroupingByTypeTest {
 
     @Test
     void countGroupingByType() {

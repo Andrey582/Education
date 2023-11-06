@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WhichAnimalSexMoreTest {
 
     @Test
-    void WhichAnimalSexMore() {
+    void whichAnimalSexMore() {
 
         List<Animal> list = getListOfAnimals();
         Animal.Sex expected = Animal.Sex.M;

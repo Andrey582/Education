@@ -1,16 +1,12 @@
 package edu;
 
-import edu.Validation.HeightError;
-import edu.Validation.WeightError;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class getErrorsStringTest {
+public class GetErrorsStringTest {
 
     @Test
     void getErrorsString() {

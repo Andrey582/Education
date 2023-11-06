@@ -1,23 +1,22 @@
 package edu;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class oldestAnimalTest {
+public class SumPawsTest {
 
     @Test
-    void oldestAnimal() {
+    void sumPaws() {
 
         List<Animal> list = getListOfAnimals();
-        Animal expected = expected();
+        Integer expected = 12;
 
-        Animal result = Methods.oldestAnimal(list);
+        Integer result = Methods.sumPaws(list);
 
-        assertThat(result)
-            .isEqualTo(expected);
+        assertThat(expected)
+            .isEqualTo(result);
     }
 
     List<Animal> getListOfAnimals() {
@@ -28,9 +27,5 @@ public class oldestAnimalTest {
             new Animal("cockatoo", Animal.Type.BIRD, Animal.Sex.M, 3, 28, 400, false),
             new Animal("bloodhound", Animal.Type.DOG, Animal.Sex.F, 5, 60, 42000, true)
         );
-    }
-
-    Animal expected() {
-        return new Animal("macaw", Animal.Type.BIRD, Animal.Sex.M, 35, 48, 2000, false);
     }
 }

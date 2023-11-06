@@ -1,23 +1,24 @@
 package edu;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class sumPawsTest {
+public class MostHeavyAnimalBelowKTest {
 
     @Test
-    void sumPaws() {
+    void mostHeavyAnimalBelowK() {
 
         List<Animal> list = getListOfAnimals();
-        Integer expected = 12;
+        Optional<Animal> expected = expected();
 
-        Integer result = Methods.sumPaws(list);
+        Optional<Animal> result = Methods.mostHeavyAnimalBelowK(list, 50);
 
-        assertThat(expected)
-            .isEqualTo(result);
+        assertThat(result)
+            .isEqualTo(expected);
+
     }
 
     List<Animal> getListOfAnimals() {
@@ -28,5 +29,9 @@ public class sumPawsTest {
             new Animal("cockatoo", Animal.Type.BIRD, Animal.Sex.M, 3, 28, 400, false),
             new Animal("bloodhound", Animal.Type.DOG, Animal.Sex.F, 5, 60, 42000, true)
         );
+    }
+
+    Optional<Animal> expected() {
+        return Optional.of(new Animal("piranha", Animal.Type.FISH, Animal.Sex.M, 20, 17, 2400, true));
     }
 }
