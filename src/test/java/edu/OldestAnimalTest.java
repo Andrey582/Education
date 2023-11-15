@@ -13,7 +13,7 @@ public class OldestAnimalTest {
         List<Animal> list = getListOfAnimals();
         Animal expected = expected();
 
-        Animal result = Methods.oldestAnimal(list);
+        Animal result = Methods.oldestKAnimal(list, 1);
 
         assertThat(result)
             .isEqualTo(expected);
@@ -30,6 +30,6 @@ public class OldestAnimalTest {
     }
 
     Animal expected() {
-        return new Animal("macaw", Animal.Type.BIRD, Animal.Sex.M, 35, 48, 2000, false);
+        return new Animal("piranha", Animal.Type.FISH, Animal.Sex.M, 20, 17, 2400, true);
     }
 }

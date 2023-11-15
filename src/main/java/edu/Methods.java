@@ -62,10 +62,10 @@ public class Methods {
                 e -> e.getValue().get()));
     }
 
-    public static Animal oldestAnimal(Collection<Animal> animals) {
+    public static Animal oldestKAnimal(Collection<Animal> animals, int k) {
         return animals.stream()
-            .max(Comparator.comparing(Animal::age))
-            .get();
+            .sorted(Comparator.comparing(Animal::age).reversed())
+            .toList().get(k);
     }
 
     public static Optional<Animal> mostHeavyAnimalBelowK(Collection<Animal> animals, int k) {
