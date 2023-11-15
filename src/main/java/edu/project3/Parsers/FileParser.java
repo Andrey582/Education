@@ -25,17 +25,15 @@ public class FileParser implements Parser {
     private final String path;
     private List<Path> files;
 
+    private final static int BUFFER_SIZE = 128;
     private final static Pattern LOG_PATTERN = Pattern.compile(
-        "^(\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3})" +
-            "\\s-\\s-\\s" +
-            "\\[(.*?):.*\\]" +
-            "\\s" +
-            "\"(.*)\\s(.*)\\s.*\"" +
-            "\\s" +
-            "(\\d{3})" +
-            "\\s" +
-            "(\\d{1,8})" +
-            "\\s\"-\"\\s\".*\"$"
+        "^(.*)"
+            + "\\s-\\s.*\\s"
+            + "\\[(.*?):.*\\]\\s"
+            + "\"(.*)\\s(.*)\\s.*\"\\s"
+            + "(\\d{3})\\s"
+            + "(\\d{1,15})"
+            + "\\s\".*\"\\s\".*\"$"
     );
 
     private Matcher matcher;
@@ -48,6 +46,7 @@ public class FileParser implements Parser {
         this.files = new ArrayList<>();
     }
 
+    @SuppressWarnings("MagicNumber")
     private void parse(Matcher matcher) {
         LocalDate date = LocalDate.parse(
             matcher.group(2), DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH)
@@ -66,6 +65,11 @@ public class FileParser implements Parser {
     @Override
     public void readData() throws IOException {
         getAllFilesByPath();
+
+        if (files.isEmpty()) {
+            throw new IOException("Cannot find file");
+        }
+
         storage.setFiles(files.stream().map(Path::getFileName).map(Path::toString).toList());
         for (Path file : files) {
             read(file);
@@ -75,8 +79,8 @@ public class FileParser implements Parser {
     private void read(Path path) throws IOException {
         StringBuilder sb = new StringBuilder();
 
-        try(FileChannel fileChannel = FileChannel.open(path)) {
-            ByteBuffer buffer = ByteBuffer.allocate(128);
+        try (FileChannel fileChannel = FileChannel.open(path)) {
+            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
             int bytesRead = fileChannel.read(buffer);
 
@@ -104,27 +108,30 @@ public class FileParser implements Parser {
         }
     }
 
+    @SuppressWarnings({"MultipleStringLiterals", "HiddenField"})
     private void getAllFilesByPath() throws IOException {
-        String[] files = path.split("\\*{2}");
+        String[] filesStringArray = path.split("\\*{2}");
 
-        if (files.length == 1) {
+        if (filesStringArray.length == 1) {
 
-            if (files[0].charAt(files[0].length() - 1) == '*') {
-                Path currentPath = Path.of(files[0].replace("*", ""));
+            if (filesStringArray[0].charAt(filesStringArray[0].length() - 1) == '*') {
+                Path currentPath = Path.of(filesStringArray[0].replace("*", ""));
                 walker(currentPath);
             } else {
-                this.files.add(Path.of(files[0]));
+                this.files.add(Path.of(filesStringArray[0]));
             }
         } else {
-            Path currentPath = Path.of(files[0]);
+            Path currentPath = Path.of(filesStringArray[0]);
             walker(currentPath);
             this.files = this.files.stream().filter(
                 e -> {
                     StringBuilder filePattern = new StringBuilder();
-                    for (int i = 0; i < files.length - 1; i ++) {
-                        filePattern.append(files[i]).append(".*");
+                    for (int i = 0; i < filesStringArray.length - 1; i++) {
+                        filePattern.append(
+                            filesStringArray[i].replace("/", "\\\\")
+                        ).append(".*");
                     }
-                    filePattern.append(files[files.length - 1]);
+                    filePattern.append(filesStringArray[filesStringArray.length - 1].replace("/", "\\\\"));
                     String filePath = e.toAbsolutePath().toString();
                     Pattern pattern = Pattern.compile(filePattern.toString());
                     Matcher matcher = pattern.matcher(filePath);

@@ -1,9 +1,9 @@
 package edu.project3;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.IOException;
-import java.net.*;
 
 public class Main {
 
@@ -13,10 +13,11 @@ public class Main {
     private static String format;
     private static final Logger LOGGER = LogManager.getLogger();
 
+    @SuppressWarnings("InnerAssignment")
     public static void main(String[] args) throws RuntimeException {
 
         if (args.length < 2 || args.length % 2 != 0) {
-           throw new IllegalArgumentException();
+           throw new IllegalArgumentException("Invalid arguments");
         }
 
         for (int i = 0; i < args.length; i += 2) {
@@ -30,7 +31,7 @@ public class Main {
         }
 
         if (path == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Need path");
         }
 
         LogStats logStats = new LogStats(path, dateFrom, dateTo, format);
@@ -41,7 +42,10 @@ public class Main {
             logStats.print();
 
         } catch (IOException | URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot parse by path");
         }
+    }
+
+    private Main() {
     }
 }

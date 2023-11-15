@@ -6,11 +6,11 @@ import edu.project3.Printer.ADOCPrinter;
 import edu.project3.Printer.MARKDOWNPrinter;
 import edu.project3.Types.FormatType;
 import edu.project3.Types.PathType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class LogStats {
 
@@ -35,6 +35,9 @@ public class LogStats {
         switch (pathType) {
             case FILE -> new FileParser(path, storage, dateFrom, dateTo).readData();
             case URL -> new URLParser(path, storage, dateFrom, dateTo).readData();
+            default -> {
+                // nothing
+            }
         }
     }
 
@@ -44,5 +47,9 @@ public class LogStats {
         } else {
             new ADOCPrinter(storage, dateFrom, dateTo).print();
         }
+    }
+
+    public Storage getStorage() {
+        return storage;
     }
 }

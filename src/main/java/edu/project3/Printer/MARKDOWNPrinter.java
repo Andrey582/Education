@@ -1,14 +1,17 @@
 package edu.project3.Printer;
 
 import edu.project3.Storage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings("MultipleStringLiterals")
 public class MARKDOWNPrinter implements Printer {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    private final static int DEFAULT_COUNT_REQUEST = 100;
+    private int countRequest = DEFAULT_COUNT_REQUEST;
     private final Storage storage;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
@@ -24,7 +27,7 @@ public class MARKDOWNPrinter implements Printer {
         printHeader();
         printResources();
         printAnswerCodes();
-        printIP(100);
+        printIP(countRequest);
         printDates();
     }
 
@@ -50,7 +53,9 @@ public class MARKDOWNPrinter implements Printer {
         }
 
         LOGGER.info("|Количество запросов| " + storage.getRequestCount() + " |");
-        LOGGER.info("|Средний размер ответа| " + storage.getRequestSize() / storage.getRequestCount() + "b |");
+
+        long size = storage.getRequestCount() == 0 ? 0 : storage.getRequestSize() / storage.getRequestCount();
+        LOGGER.info("|Средний размер ответа| " + size + "b |");
     }
 
     private void printResources() {
@@ -75,11 +80,11 @@ public class MARKDOWNPrinter implements Printer {
         LOGGER.info("#### Запросы от адресов \n");
         LOGGER.info("| IP | Количество |");
         LOGGER.info("|:-:|-:|");
-        for (var IP : storage.getAddress()) {
-            if (IP.getValue() <= countRequests) {
+        for (var ip : storage.getAddress()) {
+            if (ip.getValue() <= countRequests) {
                 break;
             }
-            LOGGER.info("|" + IP.getKey() + "| " + IP.getValue() + " |");
+            LOGGER.info("|" + ip.getKey() + "| " + ip.getValue() + " |");
         }
     }
 

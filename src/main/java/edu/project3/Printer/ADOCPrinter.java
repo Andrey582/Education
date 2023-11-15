@@ -1,14 +1,17 @@
 package edu.project3.Printer;
 
 import edu.project3.Storage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings("MultipleStringLiterals")
 public class ADOCPrinter implements Printer {
 
     private final static Logger LOGGER = LogManager.getLogger();
+    private final static int DEFAULT_COUNT_REQUEST = 100;
+    private int countRequest = DEFAULT_COUNT_REQUEST;
     private final Storage storage;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
@@ -24,7 +27,7 @@ public class ADOCPrinter implements Printer {
         printHeader();
         printResources();
         printAnswerCodes();
-        printIP(100);
+        printIP(countRequest);
         printDates();
     }
 
@@ -51,7 +54,9 @@ public class ADOCPrinter implements Printer {
         }
 
         LOGGER.info("|Количество запросов|" + storage.getRequestCount());
-        LOGGER.info("|Средний размер ответа|" + storage.getRequestSize() / storage.getRequestCount() + "b");
+
+        long size = storage.getRequestCount() == 0 ? 0 : storage.getRequestSize() / storage.getRequestCount();
+        LOGGER.info("|Средний размер ответа|" + size + "b");
         LOGGER.info("|===");
     }
 
@@ -82,11 +87,11 @@ public class ADOCPrinter implements Printer {
         LOGGER.info("[width=\"100%\", options=\"header\", cols=\"^,>\"]");
         LOGGER.info("|===");
         LOGGER.info("|IP|Количество");
-        for (var IP : storage.getAddress()) {
-            if (IP.getValue() <= countRequests) {
+        for (var ip : storage.getAddress()) {
+            if (ip.getValue() <= countRequests) {
                 break;
             }
-            LOGGER.info("|" + IP.getKey() + "|" + IP.getValue());
+            LOGGER.info("|" + ip.getKey() + "|" + ip.getValue());
         }
         LOGGER.info("|===");
     }
@@ -109,8 +114,13 @@ public class ADOCPrinter implements Printer {
             case "304" -> "Not Modified";
             case "403" -> "Forbidden";
             case "404" -> "Not Found";
+            case "416" -> "Range Not Satisfiable";
             case "500" -> "Internal Server Error";
             default -> "Unknown";
         };
+    }
+
+    public void setCountRequest(int count) {
+        countRequest = count;
     }
 }

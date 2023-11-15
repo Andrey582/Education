@@ -29,4 +29,7 @@ public class DataParser {
             case null, default -> null;
         };
     }
+
+    private DataParser() {
+    }
 }

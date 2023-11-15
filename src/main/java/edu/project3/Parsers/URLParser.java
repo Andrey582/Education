@@ -23,16 +23,13 @@ public class URLParser implements Parser {
     private final LocalDate dateTo;
 
     private final static Pattern LOG_PATTERN = Pattern.compile(
-        "^(\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3})" +
-            "\\s-\\s-\\s" +
-            "\\[(.*?):.*\\]" +
-            "\\s" +
-            "\"(.*)\\s(.*)\\s.*\"" +
-            "\\s" +
-            "(\\d{3})" +
-            "\\s" +
-            "(\\d{1,5})" +
-            "\\s\"-\"\\s\".*\"$"
+        "^(.*)"
+            + "\\s-\\s.*\\s"
+            + "\\[(.*?):.*\\]\\s"
+            + "\"(.*)\\s(.*)\\s.*\"\\s"
+            + "(\\d{3})\\s"
+            + "(\\d{1,15})"
+            + "\\s\".*\"\\s\".*\"$"
     );
 
     private Matcher matcher;
@@ -46,6 +43,7 @@ public class URLParser implements Parser {
         this.dateTo = dateTo == null ? LocalDate.MAX : dateTo;
     }
 
+    @SuppressWarnings("MagicNumber")
     private void parse(Matcher matcher) {
         LocalDate date = LocalDate.parse(
             matcher.group(2), DateTimeFormatter.ofPattern("dd/MMM/yyyy", Locale.ENGLISH)
