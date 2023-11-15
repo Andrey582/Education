@@ -24,7 +24,7 @@ public class Task8 {
     }
 
     public static boolean everyOddElementEqualsOne(String input) {
-        Pattern pattern = Pattern.compile("^(1[0|1]?)+1?$");
+        Pattern pattern = Pattern.compile("^(1[01])*1?$");
         Matcher matcher = pattern.matcher(input);
         return matcher.find();
     }
