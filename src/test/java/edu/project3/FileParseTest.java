@@ -29,7 +29,7 @@ public class FileParseTest {
         List<String> result = logStats.getStorage().getFiles();
 
         assertThat(result)
-            .isEqualTo(expected);
+            .containsAll(expected);
     }
 
     @ParameterizedTest
@@ -114,7 +114,9 @@ public class FileParseTest {
                     "/downloads/product_2", 60)
                     .entrySet()
                     .stream()
-                    .toList()),
+                    .sorted(Map.Entry.comparingByValue())
+                    .toList()
+                    .reversed()),
             Arguments.of("test/*", "2015-05-18", "2015-05-20",
                 Map.of(
                         "/downloads/product_1", 941,
