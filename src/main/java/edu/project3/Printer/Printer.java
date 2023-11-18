@@ -5,5 +5,6 @@ import java.nio.file.Path;
 
 public interface Printer {
     void print();
+
     void printToFile(Path path) throws IOException;
 }
