@@ -122,22 +122,8 @@ public class FileParser implements Parser {
             }
         } else {
             Path currentPath = Path.of(filesStringArray[0]);
-            walker(currentPath);
-            this.files = this.files.stream().filter(
-                e -> {
-                    StringBuilder filePattern = new StringBuilder();
-                    for (int i = 0; i < filesStringArray.length - 1; i++) {
-                        filePattern.append(
-                            filesStringArray[i].replace("/", "\\\\")
-                        ).append(".*");
-                    }
-                    filePattern.append(filesStringArray[filesStringArray.length - 1].replace("/", "\\\\"));
-                    String filePath = e.toAbsolutePath().toString();
-                    Pattern pattern = Pattern.compile(filePattern.toString());
-                    Matcher matcher = pattern.matcher(filePath);
-                    return matcher.find();
-                }
-            ).toList();
+            Path fileName = Path.of(filesStringArray[1]);
+            walker(currentPath, fileName);
         }
     }
 
@@ -147,6 +133,19 @@ public class FileParser implements Parser {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (!Files.isDirectory(file)) {
+                    files.add(file.toAbsolutePath());
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    private void walker(Path path, Path filename) throws IOException {
+        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (!Files.isDirectory(file) && file.toFile().getName().equals(filename.toFile().getName())) {
                     files.add(file.toAbsolutePath());
                 }
                 return FileVisitResult.CONTINUE;

@@ -8,6 +8,7 @@ import edu.project3.Types.FormatType;
 import edu.project3.Types.PathType;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,6 +47,14 @@ public class LogStats {
             new MARKDOWNPrinter(storage, dateFrom, dateTo).print();
         } else {
             new ADOCPrinter(storage, dateFrom, dateTo).print();
+        }
+    }
+
+    public void printToFile(Path path) throws IOException {
+        if (formatType == null || formatType == FormatType.MARKDOWN) {
+            new MARKDOWNPrinter(storage, dateFrom, dateTo).printToFile(path);
+        } else {
+            new ADOCPrinter(storage, dateFrom, dateTo).printToFile(path);
         }
     }
 

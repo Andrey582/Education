@@ -84,7 +84,7 @@ public class SiteParseTest {
     public static Stream<Arguments> nameSiteProvider() {
         return Stream.of(
             Arguments.of("https://raw.githubusercontent.com/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs",
-                List.of("/elastic/examples/master/Common%20Data%20Formats/nginx_logs/nginx_logs"))
+                List.of("/elastic/examples/master/Common Data Formats/nginx_logs/nginx_logs"))
         );
     }
 

@@ -8,6 +8,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class URLParser implements Parser {
 
-    private final URL url;
+    private final URI uri;
     private final Storage storage;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
@@ -35,9 +38,9 @@ public class URLParser implements Parser {
     private Matcher matcher;
 
     public URLParser(String url, Storage storage, LocalDate dateFrom, LocalDate dateTo)
-        throws URISyntaxException, MalformedURLException {
+        throws URISyntaxException {
 
-        this.url = new URI(url).toURL();
+        this.uri = new URI(url);
         this.storage = storage;
         this.dateFrom = dateFrom == null ? LocalDate.MIN : dateFrom;
         this.dateTo = dateTo == null ? LocalDate.MAX : dateTo;
@@ -61,16 +64,32 @@ public class URLParser implements Parser {
 
     @Override
     public void readData() throws IOException {
-        storage.setFiles(List.of(url.getFile()));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream()));
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            matcher = LOG_PATTERN.matcher(line);
+        HttpRequest request = HttpRequest
+            .newBuilder(uri)
+            .GET()
+            .build();
 
-            if (matcher.find()) {
-                parse(matcher);
+        try {
+            HttpResponse<String> response = HttpClient
+                .newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+            String[] logs = response.body().split("\n");
+
+            for (String log : logs) {
+                matcher = LOG_PATTERN.matcher(log);
+
+                if (matcher.find()) {
+                    parse(matcher);
+                }
             }
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+
+        storage.setFiles(List.of(uri.getPath()));
+
     }
 }

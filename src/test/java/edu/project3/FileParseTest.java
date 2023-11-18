@@ -86,8 +86,7 @@ public class FileParseTest {
     public static Stream<Arguments> nameFileProvider() {
         return Stream.of(
             Arguments.of("test/logs.txt", List.of("logs.txt")),
-            // Тест проходит на ноутбуке, но падает в гите
-            //Arguments.of("test/**/logs2.txt", List.of( "logs2.txt", "logs2.txt")),
+            Arguments.of("test/**/logs2.txt", List.of( "logs2.txt", "logs2.txt")),
             Arguments.of("test/*", List.of("logs.txt", "logs2.txt", "logs2.txt"))
         );
     }

@@ -1,6 +1,10 @@
 package edu.project3.Printer;
 
 import edu.project3.Storage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.apache.logging.log4j.LogManager;
@@ -24,77 +28,137 @@ public class MARKDOWNPrinter implements Printer {
 
     @Override
     public void print() {
-        printHeader();
-        printResources();
-        printAnswerCodes();
-        printIP(countRequest);
-        printDates();
+        LOGGER.info(header());
+        LOGGER.info(resources());
+        LOGGER.info(answerCodes());
+        LOGGER.info(ip(countRequest));
+        LOGGER.info(dates());
     }
 
-    private void printHeader() {
-        LOGGER.info("#### Общая информация\n");
-        LOGGER.info("| Метрика | Значение |");
-        LOGGER.info("|:-:|-:|");
-        LOGGER.info("|Файл(-ы)| `" + storage.getFiles().get(0) + "`|");
+    @Override
+    public void printToFile(Path path) throws IOException {
+        if (!path.toFile().exists()) {
+            Files.createFile(path);
+        }
+        Files.writeString(path, header());
+        Files.writeString(path, resources(), StandardOpenOption.APPEND);
+        Files.writeString(path, answerCodes(), StandardOpenOption.APPEND);
+        Files.writeString(path, ip(countRequest), StandardOpenOption.APPEND);
+        Files.writeString(path, dates(), StandardOpenOption.APPEND);
+    }
+
+    private String header() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#### Общая информация\n");
+        sb.append("| Метрика | Значение |\n");
+        sb.append("|:-:|-:|\n");
+        sb.append("|Файл(-ы)| `");
+        sb.append(storage.getFiles().get(0));
+        sb.append("`|\n");
         for (int i = 1; i < storage.getFiles().size(); i++) {
-            LOGGER.info("|| `" + storage.getFiles().get(i) + "` |");
+            sb.append("|| `");
+            sb.append(storage.getFiles().get(i));
+            sb.append("` |\n");
         }
 
         if (dateFrom != null) {
-            LOGGER.info("|Начальная дата| " + dateFrom.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " |");
+            sb.append("|Начальная дата| ");
+            sb.append(dateFrom.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            sb.append(" |\n");
         } else {
-            LOGGER.info("|Начальная дата| - |");
+            sb.append("|Начальная дата| - |\n");
         }
 
         if (dateTo != null) {
-            LOGGER.info("|Конечная дата| " + dateTo.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " |");
+            sb.append("|Конечная дата| ");
+            sb.append(dateTo.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+            sb.append(" |\n");
         } else {
-            LOGGER.info("|Конечная дата| - |");
+            sb.append("|Конечная дата| - |\n");
         }
 
-        LOGGER.info("|Количество запросов| " + storage.getRequestCount() + " |");
+        sb.append("|Количество запросов| ");
+        sb.append(storage.getRequestCount());
+        sb.append(" |\n");
 
         long size = storage.getRequestCount() == 0 ? 0 : storage.getRequestSize() / storage.getRequestCount();
-        LOGGER.info("|Средний размер ответа| " + size + "b |");
+        sb.append("|Средний размер ответа| ");
+        sb.append(size);
+        sb.append("b |\n");
+        return sb.toString();
     }
 
-    private void printResources() {
-        LOGGER.info("#### Запрашиваемые ресурсы \n");
-        LOGGER.info("|Ресурс|Количество|");
-        LOGGER.info("|:-:|-:|");
+    private String resources() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#### Запрашиваемые ресурсы \n");
+        sb.append("|Ресурс|Количество|\n");
+        sb.append("|:-:|-:|\n");
         for (var resource : storage.getResources()) {
-            LOGGER.info("|`" + resource.getKey() + "`| " + resource.getValue() + " |");
+            sb.append("|`");
+            sb.append(resource.getKey());
+            sb.append("`| ");
+            sb.append(resource.getValue());
+            sb.append(" |\n");
         }
+        return sb.toString();
     }
 
-    private void printAnswerCodes() {
-        LOGGER.info("#### Коды ответа \n");
-        LOGGER.info("| Код | Имя | Количество |");
-        LOGGER.info("|:-:|:-:|-:|");
+    private String answerCodes() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#### Коды ответа \n");
+        sb.append("| Код | Имя | Количество |\n");
+        sb.append("|:-:|:-:|-:|\n");
         for (var code : storage.getAnswerCode()) {
-            LOGGER.info("| " + code.getKey() + " |" + getAnswerByCode(code.getKey()) + " | " + code.getValue() + " |");
+            sb.append("| ");
+            sb.append(code.getKey());
+            sb.append(" |");
+            sb.append(getAnswerByCode(code.getKey()));
+            sb.append(" | ");
+            sb.append(code.getValue());
+            sb.append(" |\n");
         }
+
+        return sb.toString();
     }
 
-    private void printIP(int countRequests) {
-        LOGGER.info("#### Запросы от адресов \n");
-        LOGGER.info("| IP | Количество |");
-        LOGGER.info("|:-:|-:|");
+    private String ip(int countRequests) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#### Запросы от адресов \n");
+        sb.append("| IP | Количество |\n");
+        sb.append("|:-:|-:|\n");
         for (var ip : storage.getAddress()) {
             if (ip.getValue() <= countRequests) {
                 break;
             }
-            LOGGER.info("|" + ip.getKey() + "| " + ip.getValue() + " |");
+            sb.append("|");
+            sb.append(ip.getKey());
+            sb.append("| ");
+            sb.append(ip.getValue());
+            sb.append(" |\n");
         }
+
+        return sb.toString();
     }
 
-    private void printDates() {
-        LOGGER.info("#### Запросы по датам \n");
-        LOGGER.info("| Дата | Количество |");
-        LOGGER.info("|:-:|-:|");
+    private String dates() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("#### Запросы по датам \n");
+        sb.append("| Дата | Количество |\n");
+        sb.append("|:-:|-:|\n");
         for (var data : storage.getDates()) {
-            LOGGER.info("|" + data.getKey() + "| " + data.getValue() + " |");
+            sb.append("|");
+            sb.append(data.getKey());
+            sb.append("| ");
+            sb.append(data.getValue());
+            sb.append(" |\n");
         }
+
+        return sb.toString();
     }
 
     private String getAnswerByCode(String code) {

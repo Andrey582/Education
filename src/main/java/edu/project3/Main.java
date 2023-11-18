@@ -2,6 +2,7 @@ package edu.project3;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +40,7 @@ public class Main {
         try {
 
             logStats.parse();
+            logStats.printToFile(Path.of("file.adoc"));
             logStats.print();
 
         } catch (IOException | URISyntaxException e) {
