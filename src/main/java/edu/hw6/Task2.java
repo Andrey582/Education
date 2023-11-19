@@ -1,29 +1,21 @@
 package edu.hw6;
 
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Task2 {
 
-    public static void main(String[] args) {
-        try {
-            cloneFile(Path.of("test.txt"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    @SuppressWarnings("MultipleStringLiterals")
     public static void cloneFile(Path path) throws IOException {
 
-        if (!path.toFile().isFile()) {
-            throw new IllegalArgumentException();
+        if (Files.isDirectory(path)) {
+            throw new IllegalArgumentException("Need file path");
+        }
+
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+            return;
         }
 
         int count = 0;
@@ -49,7 +41,8 @@ public class Task2 {
                 break;
             }
         } while (true);
+    }
 
-
+    private Task2() {
     }
 }

@@ -15,7 +15,7 @@ import java.util.zip.Checksum;
 
 public class Task4 {
 
-    public static void createFile(String fileName, String textToWrite) {
+    public static void writeToFile(String fileName, String textToWrite) {
 
         byte[] bytes = textToWrite.getBytes();
         Checksum sum = new CRC32();
@@ -45,5 +45,8 @@ public class Task4 {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private Task4() {
     }
 }

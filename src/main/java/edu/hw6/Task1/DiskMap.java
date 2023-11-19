@@ -1,13 +1,8 @@
 package edu.hw6.Task1;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
@@ -16,15 +11,14 @@ import java.util.Map;
 
 public class DiskMap {
 
+    private final static int BUFFER_SIZE = 128;
     private Map<String, String> storage;
     private Path path;
 
-    public DiskMap(String path) {
-        this.path = Path.of(path);
+    public DiskMap(Path path) {
+        this.path = path;
         this.storage = new HashMap<>();
     }
-
-
 
     public void safeValueToFile() {
 
@@ -35,7 +29,7 @@ public class DiskMap {
             StandardOpenOption.TRUNCATE_EXISTING)
         ) {
 
-            ByteBuffer buffer = ByteBuffer.allocate(128);
+            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
             List<Map.Entry<String, String>> list = storage.entrySet().stream().toList();
 
@@ -61,7 +55,7 @@ public class DiskMap {
             StandardOpenOption.READ)
         ) {
 
-            ByteBuffer buffer = ByteBuffer.allocate(128);
+            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 
             StringBuilder sb = new StringBuilder();
 

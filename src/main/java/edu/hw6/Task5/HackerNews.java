@@ -6,20 +6,10 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HackerNews {
-
-    public static void main(String[] args) {
-        try {
-            System.out.println(news(37570037));
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static long[] hackerNewsTopStories() {
 
@@ -36,7 +26,7 @@ public class HackerNews {
             return new long[]{};
         }
 
-        String body = client.body().replace("\\[|\\]", "");
+        String body = client.body().replace("[", "").replace("]", "");
         String[] array = body.split(",");
 
         return Arrays.stream(array).mapToLong(Long::valueOf).toArray();
@@ -60,7 +50,8 @@ public class HackerNews {
         } else {
             return "";
         }
-
     }
 
+    private HackerNews() {
+    }
 }

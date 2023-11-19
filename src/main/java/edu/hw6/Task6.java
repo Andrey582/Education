@@ -1,18 +1,14 @@
 package edu.hw6;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.nio.file.Files;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+@SuppressWarnings({"MultipleStringLiterals", "MagicNumber", "EmptyBlock"})
 public class Task6 {
-
-    public static void main(String[] args) {
-        checkPort();
-    }
 
     private final static Logger LOGGER = LogManager.getLogger();
 
@@ -61,5 +57,8 @@ public class Task6 {
             case 17500 -> "Dropbox";
             default -> "";
         };
+    }
+
+    private Task6() {
     }
 }
