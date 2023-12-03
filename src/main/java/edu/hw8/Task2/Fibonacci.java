@@ -2,10 +2,11 @@ package edu.hw8.Task2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class Fibonacci {
     private static List<Long> fibonacci;
+
+    private static final int COUNT_NUMBERS_BY_ONE_THREAD = 5;
 
     public static List<Long> fibonacciNumbers(int countThreads) {
 
@@ -14,7 +15,7 @@ public class Fibonacci {
         try (ThreadPool pool = FixedThreadPool.create(countThreads)) {
 
             pool.execute(() -> {
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < COUNT_NUMBERS_BY_ONE_THREAD; i++) {
                     getNewElement();
                 }
             });
@@ -35,5 +36,8 @@ public class Fibonacci {
         } else {
             fibonacci.add(fibonacci.get(fibonacci.size() - 1) + fibonacci.get(fibonacci.size() - 2));
         }
+    }
+
+    private Fibonacci() {
     }
 }

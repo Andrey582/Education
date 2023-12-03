@@ -10,25 +10,18 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
-
-    public static void main(String[] args) {
-        Server server = new Server();
-        try {
-            server.startServer();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private ExecutorService service;
     private Selector serverSelector;
     private ServerSocketChannel serverChannel;
     private boolean isRun = true;
 
-    private static final Map<String, String> answers = Map.of(
+    private static final Map<String, String> ANSWERS = Map.of(
         "личности", "Не переходи на личности там, где их нет",
         "оскорбления", "Если твои противники перешли на личные оскорбления, будь уверена — твоя победа не за горами",
         "глупый", "А я тебе говорил, что ты глупый? Так вот, я забираю свои слова обратно... Ты просто бог идиотизма.",
@@ -36,10 +29,12 @@ public class Server {
     );
 
     public static final int PORT = 8080;
+    public static final int THREAD_COUNT = 4;
+    public static final int BUFFER_SIZE = 256;
 
     public void startServer() throws IOException {
 
-        service = Executors.newFixedThreadPool(4);
+        service = Executors.newFixedThreadPool(THREAD_COUNT);
         serverSelector = Selector.open();
         serverChannel = ServerSocketChannel.open();
 
@@ -80,7 +75,7 @@ public class Server {
 
     private void writer(SelectionKey key) {
         SocketChannel client = (SocketChannel) key.channel();
-        ByteBuffer buffer = ByteBuffer.allocate(256);
+        ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
         try {
             client.read(buffer);
         } catch (IOException e) {
@@ -89,7 +84,7 @@ public class Server {
 
         buffer.flip();
 
-        String answer = answers.get(new String(buffer.array()).trim().toLowerCase());
+        String answer = ANSWERS.get(new String(buffer.array()).trim().toLowerCase());
         buffer.flip();
         buffer.clear();
         if (answer == null) {

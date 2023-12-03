@@ -10,7 +10,7 @@ public class SingleBrute {
     private final Map<String, String> dataBase;
     private final Map<String, String> outputDataBase;
 
-    private final List<Character> ALPHABET;
+    private final List<Character> alphabet;
     private StringBuilder lastPassword;
 
     public SingleBrute(List<String> inputDataBase) {
@@ -19,7 +19,7 @@ public class SingleBrute {
             String[] values = string.split(" ");
             this.dataBase.put(values[1], values[0]);
         }
-        ALPHABET = new ArrayList<>();
+        alphabet = new ArrayList<>();
         fillAlphabet();
         lastPassword = new StringBuilder();
         outputDataBase = new HashMap<>();
@@ -47,24 +47,24 @@ public class SingleBrute {
         int index = string.length() - 1;
 
         if (index == -1) {
-            string.append(ALPHABET.getFirst());
+            string.append(alphabet.getFirst());
             return;
         }
 
-        if (string.charAt(index) == ALPHABET.getLast()) {
-            while (index >= 0 && string.charAt(index) == ALPHABET.getLast()) {
-                string.setCharAt(index, ALPHABET.getFirst());
+        if (string.charAt(index) == alphabet.getLast()) {
+            while (index >= 0 && string.charAt(index) == alphabet.getLast()) {
+                string.setCharAt(index, alphabet.getFirst());
                 if (index == 0) {
-                    string.append(ALPHABET.getFirst());
+                    string.append(alphabet.getFirst());
                 } else {
                     index--;
-                    int alphabetIndex = ALPHABET.indexOf(string.charAt(index));
-                    string.setCharAt(index, ALPHABET.get(alphabetIndex + 1));
+                    int alphabetIndex = alphabet.indexOf(string.charAt(index));
+                    string.setCharAt(index, alphabet.get(alphabetIndex + 1));
                 }
             }
         } else {
-            int alphabetIndex = ALPHABET.indexOf(string.charAt(index));
-            string.setCharAt(index, ALPHABET.get(alphabetIndex + 1));
+            int alphabetIndex = alphabet.indexOf(string.charAt(index));
+            string.setCharAt(index, alphabet.get(alphabetIndex + 1));
         }
     }
 
@@ -73,10 +73,10 @@ public class SingleBrute {
             ALPHABET.add(i);
         }*/
         for (char i = 'a'; i <= 'z'; i++) {
-            ALPHABET.add(i);
+            alphabet.add(i);
         }
         for (char i = '0'; i <= '9'; i++) {
-            ALPHABET.add(i);
+            alphabet.add(i);
         }
     }
 }

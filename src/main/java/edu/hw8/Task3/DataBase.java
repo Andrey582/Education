@@ -17,4 +17,6 @@ public class DataBase {
         "ten f68e7a35dc5d2590496f36c1bf27eee5"
     );
 
+    private DataBase() {
+    }
 }

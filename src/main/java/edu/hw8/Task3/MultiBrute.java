@@ -1,6 +1,5 @@
 package edu.hw8.Task3;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,7 @@ public class MultiBrute {
 
     private final Map<String, String> dataBase;
     private final Map<String, String> outputDataBase;
-    private final List<Character> ALPHABET;
+    private final List<Character> alphabet;
     private CountDownLatch cdl;
     private final ReentrantReadWriteLock rwLock;
     private int counter = 0;
@@ -23,7 +22,7 @@ public class MultiBrute {
             String[] values = string.split(" ");
             this.dataBase.put(values[1], values[0]);
         }
-        ALPHABET = new ArrayList<>();
+        alphabet = new ArrayList<>();
         fillAlphabet();
         rwLock = new ReentrantReadWriteLock();
         outputDataBase = new HashMap<>();
@@ -56,17 +55,17 @@ public class MultiBrute {
             throw new RuntimeException(e);
         }
 
-        int size = ALPHABET.size() / counter;
+        int size = alphabet.size() / counter;
         int start = selfIndex == 1 ? 0 : size * (selfIndex - 1) + 1;
-        int end = selfIndex == counter ? ALPHABET.size() - 1 : size * selfIndex;
+        int end = selfIndex == counter ? alphabet.size() - 1 : size * selfIndex;
         StringBuilder password = new StringBuilder();
 
         while (dataBase.size() > outputDataBase.size()) {
             do {
                 getNextWord(password, start, end);
 
-            } while (!dataBase.containsKey(MD5.MD5Hash(password.toString())) &&
-                dataBase.size() > outputDataBase.size());
+            } while (!dataBase.containsKey(MD5.MD5Hash(password.toString()))
+                && dataBase.size() > outputDataBase.size());
 
             if (dataBase.containsKey(MD5.MD5Hash(password.toString()))) {
                 rwLock.writeLock().lock();
@@ -80,28 +79,28 @@ public class MultiBrute {
         int index = string.length() - 1;
 
         if (index == -1) {
-            string.append(ALPHABET.get(start));
+            string.append(alphabet.get(start));
             return;
         }
         if (index == 0) {
 
-            if (string.charAt(index) == ALPHABET.get(end)) {
-                string.setCharAt(index, ALPHABET.get(start));
-                string.append(ALPHABET.getFirst());
+            if (string.charAt(index) == alphabet.get(end)) {
+                string.setCharAt(index, alphabet.get(start));
+                string.append(alphabet.getFirst());
             } else {
                 string.setCharAt(index, getNextChar(string.charAt(index)));
             }
 
-        } else if (string.charAt(index) == ALPHABET.getLast()) {
+        } else if (string.charAt(index) == alphabet.getLast()) {
 
-            while (index > 0 && string.charAt(index) == ALPHABET.getLast()) {
-                string.setCharAt(index, ALPHABET.getFirst());
+            while (index > 0 && string.charAt(index) == alphabet.getLast()) {
+                string.setCharAt(index, alphabet.getFirst());
                 index--;
             }
             if (index == 0) {
-                if (string.charAt(index) == ALPHABET.get(end)) {
-                    string.append(ALPHABET.getFirst());
-                    string.setCharAt(index, ALPHABET.get(start));
+                if (string.charAt(index) == alphabet.get(end)) {
+                    string.append(alphabet.getFirst());
+                    string.setCharAt(index, alphabet.get(start));
                 } else {
                     string.setCharAt(index, getNextChar(string.charAt(index)));
                 }
@@ -114,17 +113,18 @@ public class MultiBrute {
     }
 
     private char getNextChar(char ch) {
-        return ALPHABET.get(ALPHABET.indexOf(ch) + 1);
+        return alphabet.get(alphabet.indexOf(ch) + 1);
     }
+
     private void fillAlphabet() {
         /*for (char i = 'A'; i <= 'Z'; i++) {
             ALPHABET.add(i);
         }*/
         for (char i = 'a'; i <= 'z'; i++) {
-            ALPHABET.add(i);
+            alphabet.add(i);
         }
         for (char i = '0'; i <= '9'; i++) {
-            ALPHABET.add(i);
+            alphabet.add(i);
         }
     }
 

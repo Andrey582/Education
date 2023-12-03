@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5 {
 
+    @SuppressWarnings("MethodName")
     public static String MD5Hash(String password) {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -16,16 +17,18 @@ public class MD5 {
         }
     }
 
-    private static String bytesToHex(byte[] array)
-    {
+    @SuppressWarnings("MagicNumber")
+    private static String bytesToHex(byte[] array) {
         char[] val = new char[2 * array.length];
         String hex = "0123456789abcdef";
-        for (int i = 0; i < array.length; i++)
-        {
+        for (int i = 0; i < array.length; i++) {
             int b = array[i] & 0xff;
             val[2 * i] = hex.charAt(b >>> 4);
             val[2 * i + 1] = hex.charAt(b & 15);
         }
         return String.valueOf(val);
+    }
+
+    private MD5() {
     }
 }
