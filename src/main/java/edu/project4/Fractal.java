@@ -1,0 +1,227 @@
+package edu.project4;
+
+import edu.project4.Transformations.Transformation;
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.rmi.MarshalledObject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Fractal {
+    private final Pixel[][] pixels;
+    private final Coefficient[] coefficients;
+    private final Colors[] colors;
+    private final int width;
+    private final int height;
+    private int coeffCount;
+    private Thread[] threads;
+    private final static Random random = new Random();
+    private ReentrantLock lock = new ReentrantLock();
+
+
+    public Fractal(int width, int height, int coeffCount) {
+        this.width = width;
+        this.height = height;
+        pixels = new Pixel[width][height];
+        coefficients = new Coefficient[coeffCount];
+        colors = new Colors[coeffCount];
+        this.coeffCount = coeffCount;
+        coefficientInit(coeffCount);
+        fillPixels();
+    }
+
+    private void fillPixels() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixels[x][y] = new Pixel();
+            }
+        }
+    }
+
+    private void coefficientInit(int coefficientCount) {
+        for (int i = 0; i < coefficientCount; i++) {
+            coefficients[i] = generateCoeff();
+            colors[i] = new Colors(
+              random.nextInt(64, 200),
+              random.nextInt(64, 200),
+              random.nextInt(64, 200)
+            );
+        }
+    }
+
+    private Coefficient generateCoeff() {
+        double a;
+        double b;
+        double c;
+        double d;
+        double e;
+        double f;
+
+        do {
+            do {
+                a = random.nextDouble(-1, 1);
+                d = random.nextDouble(-1, 1);
+            } while ((a * a + d * d) > 1);
+
+            do {
+                b = random.nextDouble(-1, 1);
+                e = random.nextDouble(-1, 1);
+            } while ((b * b + e * e) > 1);
+        } while ((a * a + b * b + d * d + e * e) > (1 + (a * e - d * b) * (a * e - d * b)));
+
+        c = random.nextDouble(-2, 2);
+        f = random.nextDouble(-2, 2);
+        return new Coefficient(a, b, c, d, e, f);
+    }
+
+    public void generate(int sample, int iterartion, int symmetry, List<Transformation> transformations) {
+
+        ThreadLocalRandom localRandom = ThreadLocalRandom.current();
+
+        for (int num = 0; num < sample; num++) {
+
+            Point point = new Point(
+                localRandom.nextDouble(CoefficientValue.XMIN, CoefficientValue.XMAX),
+                localRandom.nextDouble(CoefficientValue.YMIN, CoefficientValue.YMAX)
+            );
+
+            for (int step = 0; step < iterartion; step++) {
+
+                int i = localRandom.nextInt(coeffCount);
+                Coefficient currentCoeff = coefficients[i];
+                Colors currentColors = colors[i];
+
+                point = new Point(
+                    currentCoeff.a() * point.x() + currentCoeff.b() * point.y() + currentCoeff.c(),
+                    currentCoeff.d() * point.x() + currentCoeff.e() * point.y() + currentCoeff.f()
+                );
+
+                point = transformations.get(localRandom.nextInt(transformations.size())).apply(point);
+
+                double theta2 = 0.0;
+
+                for (int s = 0; s < symmetry; s++) {
+
+                    theta2 += 2 * Math.PI / symmetry;
+
+                    Point rPoint = new Point(
+                        point.x() * Math.cos(theta2) - point.y() * Math.sin(theta2),
+                        point.x() * Math.sin(theta2) + point.y() * Math.cos(theta2)
+                        );
+
+                    if (isPointInInterval(rPoint)) {
+
+                        int x = width - (int)
+                            (((CoefficientValue.XMAX - rPoint.x()) / (CoefficientValue.XMAX - CoefficientValue.XMIN)) * width);
+                        int y = height - (int)
+                            (((CoefficientValue.YMAX - rPoint.y()) / (CoefficientValue.YMAX - CoefficientValue.YMIN)) * height);
+
+                        if (isPointInWindow(x, y)) {
+                            synchronized (this) {
+                                Pixel current = pixels[x][y];
+
+                                if (current.getHitCounter() == 0) {
+                                    current.setR(currentColors.r());
+                                    current.setG(currentColors.g());
+                                    current.setB(currentColors.b());
+                                } else {
+                                    current.setR((current.getR() + currentColors.r()) / 2);
+                                    current.setG((current.getG() + currentColors.g()) / 2);
+                                    current.setB((current.getB() + currentColors.b()) / 2);
+                                }
+                                current.incrementHitCounter();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void createFractal(int sample, int iterartion, int symmetry, List<Transformation> transformations, int threadCount) {
+        threads = new Thread[threadCount];
+
+        int finalSample = sample / threadCount;
+
+        for (int i = 0; i < threadCount; i++) {
+            threads[i] = new Thread(() -> generate(finalSample, iterartion, symmetry, transformations));
+            threads[i].start();
+        }
+
+        try {
+            for (int i = 0; i < threadCount; i++) {
+                threads[i].join();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void render(Graphics g) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                g.setColor(new Color(pixels[x][y].getR(), pixels[x][y].getG(), pixels[x][y].getB()));
+                g.drawLine(x, y, x, y);
+            }
+        }
+    }
+
+    public void gammaLog() {
+        double gamma = 2.2;
+        double max = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (pixels[x][y].getHitCounter() != 0) {
+                    pixels[x][y].setNormal(Math.log10(pixels[x][y].getHitCounter()));
+                    if (pixels[x][y].getNormal() > max) {
+                        max = pixels[x][y].getNormal();
+                    }
+                }
+            }
+        }
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixels[x][y].setNormal(pixels[x][y].getNormal() / max);
+                pixels[x][y].setR((int)(pixels[x][y].getR() * Math.pow(pixels[x][y].getNormal(), (1 / gamma))));
+                pixels[x][y].setG((int)(pixels[x][y].getG() * Math.pow(pixels[x][y].getNormal(), (1 / gamma))));
+                pixels[x][y].setB((int)(pixels[x][y].getB() * Math.pow(pixels[x][y].getNormal(), (1 / gamma))));
+            }
+        }
+    }
+
+    public void save(String fractalName, FileFormat format) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        gammaLog();
+        render(g);
+        try {
+            switch (format) {
+                case BMP -> ImageIO.write(image, "bmp", new File(fractalName + ".bmp"));
+                case JPEG -> ImageIO.write(image, "jpeg", new File(fractalName + ".jpeg"));
+                case PNG -> ImageIO.write(image, "png", new File(fractalName + ".png"));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean isPointInWindow(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    private boolean isPointInInterval(Point point) {
+         return point.x() >= CoefficientValue.XMIN && point.x() <= CoefficientValue.XMAX
+            && point.y() >= CoefficientValue.YMIN && point.y() <= CoefficientValue.YMAX;
+    }
+
+}
