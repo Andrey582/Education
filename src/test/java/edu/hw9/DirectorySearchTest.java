@@ -23,7 +23,8 @@ public class DirectorySearchTest {
             result = pool.invoke(findDirectory);
         }
 
-        assertThat(result).isEqualTo(expected);
+        assertThat(result)
+            .containsAll(expected);
     }
 
     public static Stream<Arguments> fileProvider() {

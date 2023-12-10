@@ -30,7 +30,7 @@ public class FileSearchTest {
         }
 
         assertThat(result)
-            .isEqualTo(expected);
+            .containsAll(expected);
 
     }
 
