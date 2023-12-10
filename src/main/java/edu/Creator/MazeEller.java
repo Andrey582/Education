@@ -72,6 +72,11 @@ public class MazeEller implements MazeCreator {
         }
     }
 
+    @Override
+    public void clean() {
+
+    }
+
     private void fillEmptyValue() {
         for (int i = 0; i < width; i++) {
             line.add(0);

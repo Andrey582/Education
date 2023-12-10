@@ -11,4 +11,6 @@ public interface MazeCreator {
     Cell[][] getMaze();
 
     void print();
+
+    void clean();
 }

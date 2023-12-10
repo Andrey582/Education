@@ -36,11 +36,11 @@ public class SolveDeepFirstSearch implements MazeSolver {
             visitCell(currentCell);
 
             List<Cell> neighbor = checkNeighbor();
-            currentCell.setType(Cell.Type.SOlVE);
+            //currentCell.setType(Cell.Type.SOlVE);
 
             if (neighbor.isEmpty()) {
                 next = deque.pollLast();
-                currentCell.setType(Cell.Type.PASSAGE);
+                //currentCell.setType(Cell.Type.PASSAGE);
             } else {
                 if (deque.peekLast() != currentCell) {
                     deque.addLast(currentCell);
@@ -55,8 +55,8 @@ public class SolveDeepFirstSearch implements MazeSolver {
 
         } while (!currentCell.equals(exit));
         deque.addLast(exit);
-        exit.setType(Cell.Type.END);
-        start.setType(Cell.Type.START);
+        //exit.setType(Cell.Type.END);
+        //start.setType(Cell.Type.START);
         return deque;
     }
 
