@@ -1,6 +1,6 @@
 package edu.project4.Transformations;
 
-import edu.project4.Point;
+import edu.project4.Model.Point;
 import java.util.function.Function;
 
 @FunctionalInterface

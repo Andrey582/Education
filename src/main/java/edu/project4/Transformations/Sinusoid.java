@@ -1,6 +1,6 @@
 package edu.project4.Transformations;
 
-import edu.project4.Point;
+import edu.project4.Model.Point;
 
 public class Sinusoid {
 
@@ -9,5 +9,8 @@ public class Sinusoid {
           Math.sin(point.x()),
           Math.sin(point.y())
         );
+    }
+
+    private Sinusoid() {
     }
 }

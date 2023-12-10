@@ -1,6 +1,6 @@
 package edu.project4.Transformations;
 
-import edu.project4.Point;
+import edu.project4.Model.Point;
 
 public class Diamond {
     public static Point doTransform(Point point) {
@@ -10,5 +10,8 @@ public class Diamond {
             Math.sin(theta) * Math.cos(r),
             Math.cos(theta) * Math.sin(r)
         );
+    }
+
+    private Diamond() {
     }
 }

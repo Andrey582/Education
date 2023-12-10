@@ -1,6 +1,6 @@
 package edu.project4.Transformations;
 
-import edu.project4.Point;
+import edu.project4.Model.Point;
 
 public class Disk {
 
@@ -11,5 +11,8 @@ public class Disk {
             theta * Math.sin(r),
             theta * Math.cos(r)
         );
+    }
+
+    private Disk() {
     }
 }

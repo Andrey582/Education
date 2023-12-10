@@ -1,6 +1,6 @@
 package edu.project4.Transformations;
 
-import edu.project4.Point;
+import edu.project4.Model.Point;
 
 public class Spherical {
 
@@ -10,5 +10,8 @@ public class Spherical {
             r * point.x(),
             r * point.y()
         );
+    }
+
+    private Spherical() {
     }
 }
