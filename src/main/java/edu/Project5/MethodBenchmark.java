@@ -29,6 +29,7 @@ public class MethodBenchmark {
     private StudentGetName studentName;
 
 
+    @SuppressWarnings({"UncommentedMain", "MagicNumber"})
     public static void main(String[] args) throws RunnerException {
         Options options = new OptionsBuilder()
             .include(MethodBenchmark.class.getSimpleName())
@@ -47,6 +48,7 @@ public class MethodBenchmark {
         new Runner(options).run();
     }
 
+    @SuppressWarnings("MultipleStringLiterals")
     @Setup
     public void setup() throws Throwable {
         student = new Student("Andrey", "Ganushkin");
