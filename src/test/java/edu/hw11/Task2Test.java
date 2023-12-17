@@ -1,10 +1,11 @@
 package edu.hw11;
 
 import edu.hw11.Task2.ArithmeticUtils;
-import edu.hw11.Task2.Task2;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatchers;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,12 +15,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Task2Test {
 
+    public static int sum (int a, int b) {
+        return a * b;
+    }
+
     @ParameterizedTest
     @MethodSource("multiplyProvider")
-    void testByteBuddyDelegate(int first, int second, int expected) throws InstantiationException, IllegalAccessException {
+    void testByteBuddyDelegate(int first, int second, int expected) {
+
         ByteBuddyAgent.install();
-        ArithmeticUtils arithmeticUtils = (ArithmeticUtils) Task2.byteBuddyMultiply.newInstance();
-        int result = arithmeticUtils.sum(first, second);
+
+        new ByteBuddy()
+            .redefine(ArithmeticUtils.class)
+            .method(ElementMatchers.named("sum"))
+            .intercept(MethodDelegation.to(Task2Test.class))
+            .make()
+            .load(
+                ArithmeticUtils.class.getClassLoader(),
+                ClassReloadingStrategy.fromInstalledAgent()
+            );
+
+
+        int result = ArithmeticUtils.sum(first, second);
 
         assertThat(result)
             .isEqualTo(expected);
