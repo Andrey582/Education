@@ -6,6 +6,6 @@ public class ArithmeticUtils {
         return a + b;
     }
 
-    private ArithmeticUtils() {
+    private ArithmeticUtils(){
     }
 }
