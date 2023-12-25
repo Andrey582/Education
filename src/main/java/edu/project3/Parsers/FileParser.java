@@ -19,14 +19,8 @@ import java.util.regex.Pattern;
 
 public class FileParser implements Parser {
 
-    private final Storage storage;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
-    private final String path;
-    private List<Path> files;
-
-    private final static int BUFFER_SIZE = 128;
-    private final static Pattern LOG_PATTERN = Pattern.compile(
+    public static final int BUFFER_SIZE = 128;
+    public static final Pattern LOG_PATTERN = Pattern.compile(
         "^(.*)"
             + "\\s-\\s.*\\s"
             + "\\[(.*?):.*\\]\\s"
@@ -35,7 +29,11 @@ public class FileParser implements Parser {
             + "(\\d{1,15})"
             + "\\s\".*\"\\s\".*\"$"
     );
-
+    private final Storage storage;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
+    private final String path;
+    private List<Path> files;
     private Matcher matcher;
 
     public FileParser(String path, Storage storage, LocalDate dateFrom, LocalDate dateTo) {

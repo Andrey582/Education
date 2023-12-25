@@ -8,11 +8,11 @@ import org.apache.logging.log4j.Logger;
 
 public class Main {
 
+    public static final Logger LOGGER = LogManager.getLogger();
     private static String path;
     private static String dateFrom;
     private static String dateTo;
     private static String format;
-    private static final Logger LOGGER = LogManager.getLogger();
 
     @SuppressWarnings("InnerAssignment")
     public static void main(String[] args) throws RuntimeException {

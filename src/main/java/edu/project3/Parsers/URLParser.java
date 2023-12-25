@@ -16,12 +16,7 @@ import java.util.regex.Pattern;
 
 public class URLParser implements Parser {
 
-    private final URI uri;
-    private final Storage storage;
-    private final LocalDate dateFrom;
-    private final LocalDate dateTo;
-
-    private final static Pattern LOG_PATTERN = Pattern.compile(
+    public static final Pattern LOG_PATTERN = Pattern.compile(
         "^(.*)"
             + "\\s-\\s.*\\s"
             + "\\[(.*?):.*\\]\\s"
@@ -30,7 +25,10 @@ public class URLParser implements Parser {
             + "(\\d{1,15})"
             + "\\s\".*\"\\s\".*\"$"
     );
-
+    private final URI uri;
+    private final Storage storage;
+    private final LocalDate dateFrom;
+    private final LocalDate dateTo;
     private Matcher matcher;
 
     public URLParser(String url, Storage storage, LocalDate dateFrom, LocalDate dateTo)

@@ -15,13 +15,13 @@ import org.apache.logging.log4j.Logger;
 
 public class LogStats {
 
+    public static final Logger LOGGER = LogManager.getLogger();
     private final String path;
     private final PathType pathType;
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
     private final FormatType formatType;
     private final Storage storage;
-    private static final Logger LOGGER = LogManager.getLogger();
 
     public LogStats(String path, String dateFrom, String dateTo, String format) {
         this.dateFrom = DataParser.parseDate(dateFrom);

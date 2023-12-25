@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings("MultipleStringLiterals")
 public class ADOCPrinter implements Printer {
 
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static int DEFAULT_COUNT_REQUEST = 100;
+    public static final Logger LOGGER = LogManager.getLogger();
+    public static final int DEFAULT_COUNT_REQUEST = 100;
     private int countRequest = DEFAULT_COUNT_REQUEST;
     private final Storage storage;
     private final LocalDate dateFrom;
